@@ -11,4 +11,4 @@ bin           = @["bg"]
 # Dependencies
 
 requires "nim >= 1.4.4"
-requires "fidget"
+requires "fidget#head"
