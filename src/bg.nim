@@ -1,6 +1,8 @@
 import random, fidget
 import fidget/opengl/base
 
+randomize()
+
 type
   Color = tuple[top, bottom: string]
   Rect = object
