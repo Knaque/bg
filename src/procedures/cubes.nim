@@ -33,7 +33,7 @@ proc drawMain*() =
   while rects.len < 25: # there should always be 25 rect objects
     rects.add(
       Rect(
-        color: colors[rand(0..3)],
+        color: sample(colors),
         w: rand(20..100), # width
         h: rand(20..100), # height
         x: rand(-19..1279), # x-pos

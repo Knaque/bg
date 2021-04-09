@@ -1,9 +1,9 @@
 import random, fidget
 
-type Rect = object
-  color: string
-  d, x, y, v: int # diameter, x-pos, y-pos, velocity
-  o: float # opacity
+type
+  Rect = object
+    color: string
+    x, y, v: int # width, height, x-pos, y-pos, velocity
 
 const colors: array[4, string] = [
   "#F8A1EC",
@@ -23,7 +23,7 @@ proc drawMain*() =
     rects[i].y -= rects[i].v
 
     # remove offscreen rects
-    if rects[i].y + rects[i].d >= 0: # if rect is visible
+    if rects[i].y + 200 >= 0: # if rect is visible
       valid_rects.add(rects[i])
   rects = valid_rects
 
@@ -32,20 +32,23 @@ proc drawMain*() =
     rects.add(
       Rect(
         color: sample(colors),
-        d: rand(20..100), # diameter
-        x: rand(-19..1279), # x-pos
+        x: rand(-49..1279), # x-pos
         y: rand(720..1000), # y-pos
-        v: rand(1..5), # velocity
-        o: rand(0.25..1.0), # opacity
+        v: rand(1..5) # velocity
       )
     )
   
   # draw each rect
   for i, rect in rects:
-    rectangle "circle":
-      box rect.x, rect.y, rect.d, rect.d
-      fill rect.color, rect.o
-      cornerRadius rect.d.float / 2
+    group "note":
+      box rect.x, rect.y, 50, 100
+      rectangle "head":
+        box 0, 50, 50, 50
+        cornerRadius 50
+        fill rect.color
+      rectangle "beam":
+        box 40, 0, 10, 75
+        fill rect.color
 
   # draw background
   rectangle "background":
