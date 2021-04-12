@@ -4,6 +4,7 @@ type
   Rect = object
     color: string
     x, y, v: int # width, height, x-pos, y-pos, velocity
+    halfnote: bool # half note vs quarter note
 
 const colors: array[4, string] = [
   "#F8A1EC",
@@ -34,20 +35,31 @@ proc drawMain*() =
         color: sample(colors),
         x: rand(-49..1279), # x-pos
         y: rand(720..1000), # y-pos
-        v: rand(1..5) # velocity
+        v: rand(1..5), # velocity
+        halfnote: sample([true, false]) # half note vs quarter note
       )
     )
   
   # draw each rect
   for i, rect in rects:
     group "note":
-      box rect.x, rect.y, 50, 100
+      box rect.x, rect.y, 50, 125
       rectangle "head":
-        box 0, 50, 50, 50
+        box 0, 75, 50, 50
         cornerRadius 50
-        fill rect.color
+        case rect.halfnote
+        of true:
+          fill "#000000", 0
+          stroke rect.color
+          strokeWeight 10
+        of false:
+          fill rect.color
       rectangle "beam":
-        box 40, 0, 10, 75
+        box 40, 0, 10, 100
+        fill rect.color
+        cornerRadius 5
+      rectangle "cover":
+        box 40, 90, 10, 10
         fill rect.color
 
   # draw background
