@@ -36,7 +36,7 @@ proc drawMain*() =
     rects.add(
       Rect(
         color: sample(colors),
-        x: rand(-49..1279), # x-pos
+        x: rand(-149..1279), # x-pos
         y: rand(720..1000), # y-pos
         v: rand(1..5), # velocity
         duration: sample([Half, Quarter, Eighth]), # duration
