@@ -1,10 +1,13 @@
 import random, fidget
 
 type
+  Duration = enum
+    Half, Quarter, Eighth
   Rect = object
     color: string
     x, y, v: int # width, height, x-pos, y-pos, velocity
-    halfnote: bool # half note vs quarter note
+    duration: Duration # duration
+    flipped: bool # is flipped?
 
 const colors: array[4, string] = [
   "#F8A1EC",
@@ -36,31 +39,127 @@ proc drawMain*() =
         x: rand(-49..1279), # x-pos
         y: rand(720..1000), # y-pos
         v: rand(1..5), # velocity
-        halfnote: sample([true, false]) # half note vs quarter note
+        duration: sample([Half, Quarter, Eighth]), # duration
+        flipped: sample([true, false])
       )
     )
   
   # draw each rect
   for i, rect in rects:
-    group "note":
-      box rect.x, rect.y, 50, 125
-      rectangle "head":
-        box 0, 75, 50, 50
-        cornerRadius 50
-        case rect.halfnote
-        of true:
-          fill "#000000", 0
-          stroke rect.color
-          strokeWeight 10
-        of false:
-          fill rect.color
-      rectangle "beam":
-        box 40, 0, 10, 100
-        fill rect.color
-        cornerRadius 5
-      rectangle "cover":
-        box 40, 90, 10, 10
-        fill rect.color
+    group "bounds":
+      case rect.duration
+      of Half:
+        if rect.flipped:
+          box rect.x, rect.y, 50, 125
+          rectangle "head":
+            box 0, 0, 50, 50
+            cornerRadius 50
+            fill "#000000", 0
+            stroke rect.color
+            strokeWeight 10
+          rectangle "beam":
+            box 0, 25, 10, 100
+            fill rect.color
+            cornerRadius 5
+          rectangle "cover":
+            box 0, 25, 10, 10
+            fill rect.color
+        else:
+          box rect.x, rect.y, 50, 125
+          rectangle "head":
+            box 0, 75, 50, 50
+            cornerRadius 50
+            fill "#000000", 0
+            stroke rect.color
+            strokeWeight 10
+          rectangle "beam":
+            box 40, 0, 10, 100
+            fill rect.color
+            cornerRadius 5
+          rectangle "cover":
+            box 40, 90, 10, 10
+            fill rect.color
+      of Quarter:
+        if rect.flipped:
+          box rect.x, rect.y, 50, 125
+          rectangle "head":
+            box 0, 0, 50, 50
+            cornerRadius 50
+            fill rect.color
+          rectangle "beam":
+            box 0, 25, 10, 100
+            fill rect.color
+            cornerRadius 5
+          rectangle "cover":
+            box 0, 25, 10, 10
+            fill rect.color
+        else:
+          box rect.x, rect.y, 50, 125
+          rectangle "head":
+            box 0, 75, 50, 50
+            cornerRadius 50
+            fill rect.color
+          rectangle "beam":
+            box 40, 0, 10, 100
+            fill rect.color
+            cornerRadius 5
+          rectangle "cover":
+            box 40, 90, 10, 10
+            fill rect.color
+      of Eighth:
+        box rect.x, rect.y, 150, 125
+        if rect.flipped:
+          rectangle "head1":
+            box 0, 0, 50, 50
+            cornerRadius 50
+            fill rect.color
+          rectangle "head2":
+            box 100, 0, 50, 50
+            cornerRadius 50
+            fill rect.color
+          rectangle "beam1":
+            box 0, 25, 10, 100
+            fill rect.color
+            cornerRadius 5
+          rectangle "cover1":
+            box 0, 25, 10, 10
+            fill rect.color
+          rectangle "beam2":
+            box 100, 25, 10, 100
+            fill rect.color
+            cornerRadius 5
+          rectangle "cover2":
+            box 100, 25, 10, 10
+            fill rect.color
+          rectangle "connector beam":
+            box 5, 115, 100, 10
+            fill rect.color
+        else:
+          rectangle "head1":
+            box 0, 75, 50, 50
+            cornerRadius 50
+            fill rect.color
+          rectangle "head2":
+            box 100, 75, 50, 50
+            cornerRadius 50
+            fill rect.color
+          rectangle "beam1":
+            box 40, 0, 10, 100
+            fill rect.color
+            cornerRadius 5
+          rectangle "cover1":
+            box 40, 90, 10, 10
+            fill rect.color
+          rectangle "beam2":
+            box 140, 0, 10, 100
+            fill rect.color
+            cornerRadius 5
+          rectangle "cover2":
+            box 140, 90, 10, 10
+            fill rect.color
+          rectangle "connector beam":
+            box 45, 0, 100, 10
+            fill rect.color
 
   # draw background
   rectangle "background":

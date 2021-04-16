@@ -9,7 +9,7 @@ proc loadMain() =
 
 startFidget(
   # use random procedure on start
-  sample([beams.drawMain, circles.drawMain, cubes.drawMain, glass.drawMain, notes.drawMain]),
+  sample([notes.drawMain]),
   load=loadMain,
   w=1280,
   h=720,
