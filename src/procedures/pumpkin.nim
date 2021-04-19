@@ -1,3 +1,5 @@
+# unused because seasonal :)
+
 import random, fidget
 
 type Rect = object

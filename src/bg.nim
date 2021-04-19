@@ -1,6 +1,6 @@
 import fidget, fidget/opengl/base, random
 
-import procedures/[beams, circles, cubes, glass, notes, pumpkin]
+import procedures/[beams, circles, cubes, glass, notes, space]
 
 randomize()
 
@@ -15,7 +15,7 @@ startFidget(
     cubes.drawMain,
     glass.drawMain,
     notes.drawMain,
-    pumpkin.drawMain
+    space.drawMain
   ]),
   load=loadMain,
   w=1280,

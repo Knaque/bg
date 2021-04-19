@@ -12,3 +12,4 @@ bin           = @["bg"]
 
 requires "nim >= 1.4.4"
 requires "fidget#head"
+requires "gradient >= 1.0.0"
