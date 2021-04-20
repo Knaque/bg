@@ -7,6 +7,7 @@ type
   Star = object of Rect
   Nebula = object of Rect
     color: string
+  BlackHole = object of Star
 
 let colors = polylinearGradient( # colors for nebulae
   [
@@ -21,6 +22,13 @@ let colors = polylinearGradient( # colors for nebulae
 
 var stars: seq[Star]
 var nebulae: seq[Nebula]
+var blackhole = BlackHole(
+  d: rand(25..75), # diameter
+  x: rand(-74..1279), # x-pos
+  y: rand(720.0..1000.0), # y-pos
+  v: rand(1.0..10.0), # velocity
+  o: 1 # opacity
+)
 
 proc drawMain*() =
 
@@ -83,6 +91,30 @@ proc drawMain*() =
           o: rand(0.01..0.1), # opacity
           color: sample(colors) # color
         )
+      )
+  
+  block BlackHoleEasterEgg:
+  
+    if blackhole.y + blackhole.d.float >= 0:
+      # animate
+      blackhole.y -= blackhole.v
+
+      # draw
+      rectangle "blackhole":
+        box blackhole.x, blackhole.y, blackhole.d, blackhole.d
+        fill "#000000"
+        cornerRadius blackhole.d.float / 2
+        strokeWeight 5
+        stroke "#FFFFFF"
+
+    elif rand(0..9999) == 0:
+      # reset
+      blackhole = BlackHole(
+        d: rand(25..75), # diameter
+        x: rand(-74..1279), # x-pos
+        y: rand(720.0..1000.0), # y-pos
+        v: rand(1.0..10.0), # velocity
+        o: 1 # opacity
       )
 
   # draw background
