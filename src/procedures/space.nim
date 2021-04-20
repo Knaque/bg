@@ -60,14 +60,14 @@ proc drawMain*() =
       )
     )
 
-  while nebulae.len < 25:
+  while nebulae.len < 50:
     nebulae.add(
       Nebula(
-        d: rand(50..500), # diameter
+        d: rand(10..500), # diameter
         x: rand(-499..1279), # x-pos
         y: rand(720.0..1000.0), # y-pos
         v: rand(0.5..5.0), # velocity
-        o: rand(0.05..0.15), # opacity
+        o: rand(0.01..0.1), # opacity
         color: sample(colors) # color
       )
     )
