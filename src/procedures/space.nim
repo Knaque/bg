@@ -8,7 +8,7 @@ type
   Nebula = object of Rect
     color: string
 
-let colors = polylinearGradient(
+let colors = polylinearGradient( # colors for nebulae
   [
     "#00FFFF".parseHtmlHex,
     "#0000FF".parseHtmlHex,
@@ -19,72 +19,71 @@ let colors = polylinearGradient(
   proc(x: Color): string = toHtmlHex(x)
 )
 
-var stars: seq[Star] # sequence of star objects
+var stars: seq[Star]
 var nebulae: seq[Nebula]
 
 proc drawMain*() =
 
-  block CleanupStars:
-    var valid_stars: seq[Star] # rects that are onscreen
+  block Stars:
+    var valid: seq[Star] # visible
 
-    for i, _ in stars:
-      # animate rects
+    for i, star in stars:
+      # animate
       stars[i].y -= stars[i].v
 
-      # remove offscreen rects
+      # draw
+      rectangle "star":
+        box star.x, star.y, star.d, star.d
+        fill "#FFFFFF", star.o
+        cornerRadius star.d.float / 2
+
+      # cleanup
       if stars[i].y + stars[i].d.float >= 0: # if star is visible
-        valid_stars.add(stars[i])
-    stars = valid_stars
+        valid.add(stars[i])
+    stars = valid
 
-  block CleanupNebulae:
-    var valid_nebulae: seq[Nebula]
+    # generate
+    while stars.len < 200:
+      stars.add(
+        Star(
+          d: rand(1..5), # diameter
+          x: rand(-4..1279), # x-pos
+          y: rand(720.0..1000.0), # y-pos
+          v: rand(0.5..5.0), # velocity
+          o: rand(0.25..1.0) # opacity
+        )
+      )
 
-    for i, _ in nebulae:
-      # animate rects
+  block Nebulae:
+    var valid: seq[Nebula]
+
+    for i, nebula in nebulae:
+      # animate
       nebulae[i].y -= nebulae[i].v
 
-      # remove offscreen rects
+      # draw
+      rectangle "nebula":
+        box nebula.x, nebula.y, nebula.d, nebula.d
+        fill nebula.color, nebula.o
+        cornerRadius nebula.d.float / 2
+
+      # cleanup
       if nebulae[i].y + nebulae[i].d.float >= 0: # if star is visible
-        valid_nebulae.add(nebulae[i])
-    nebulae = valid_nebulae
+        valid.add(nebulae[i])
+    nebulae = valid
 
-  # generate new stars
-  while stars.len < 200: # there should always be 200 star objects
-    stars.add(
-      Star(
-        d: rand(1..5), # diameter
-        x: rand(-4..1279), # x-pos
-        y: rand(720.0..1000.0), # y-pos
-        v: rand(0.5..5.0), # velocity
-        o: rand(0.25..1.0) # opacity
+    # generate
+    while nebulae.len < 50:
+      nebulae.add(
+        Nebula(
+          d: rand(10..500), # diameter
+          x: rand(-499..1279), # x-pos
+          y: rand(720.0..1000.0), # y-pos
+          v: rand(0.5..5.0), # velocity
+          o: rand(0.01..0.1), # opacity
+          color: sample(colors) # color
+        )
       )
-    )
-
-  while nebulae.len < 50:
-    nebulae.add(
-      Nebula(
-        d: rand(10..500), # diameter
-        x: rand(-499..1279), # x-pos
-        y: rand(720.0..1000.0), # y-pos
-        v: rand(0.5..5.0), # velocity
-        o: rand(0.01..0.1), # opacity
-        color: sample(colors) # color
-      )
-    )
-  
-  # draw each star
-  for i, star in stars:
-    rectangle "star":
-      box star.x, star.y, star.d, star.d
-      fill "#FFFFFF", star.o
-      cornerRadius star.d.float / 2
-
-  # draw each nebula
-  for i, nebula in nebulae:
-    rectangle "nebula":
-      box nebula.x, nebula.y, nebula.d, nebula.d
-      fill nebula.color, nebula.o
-      cornerRadius nebula.d.float / 2
 
   # draw background
   rectangle "background":

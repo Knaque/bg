@@ -16,19 +16,25 @@ var rects: seq[Rect] # sequence of rect objects
 
 proc drawMain*() =
 
-  var valid_rects: seq[Rect] # rects that are onscreen
+  var valid: seq[Rect] # rects that are onscreen
 
-  for i, _ in rects:
-    # animate rects
+  for i, rect in rects:
+    # animate
     rects[i].y -= rects[i].v
     rects[i].r += rects[i].rv
 
-    # remove offscreen rects
-    if rects[i].y + rects[i].h >= 0: # if rect is visible
-      valid_rects.add(rects[i])
-  rects = valid_rects
+    # draw
+    rectangle "pane":
+      box rect.x, rect.y, rect.w, rect.h
+      fill rect.color, rect.o
+      rotation rect.r
 
-  # generate new rects
+    # cleanup
+    if rects[i].y + rects[i].h >= 0: # if rect is visible
+      valid.add(rects[i])
+  rects = valid
+
+  # generate
   while rects.len < 25: # there should always be 25 rect objects
     rects.add(
       Rect(
@@ -43,13 +49,6 @@ proc drawMain*() =
         rv: rand(-2.5..2.5), # rotation velocity
       )
     )
-  
-  # draw each rect
-  for i, rect in rects:
-    rectangle "pane":
-      box rect.x, rect.y, rect.w, rect.h
-      fill rect.color, rect.o
-      rotation rect.r
 
   # draw background
   rectangle "background":

@@ -20,18 +20,59 @@ var rects: seq[Rect] # sequence of rect objects
 
 proc drawMain*() =
 
-  var valid_rects: seq[Rect] # rects that are onscreen
+  var valid: seq[Rect] # rects that are onscreen
 
-  for i, _ in rects:
-    # animate rects
+  for i, rect in rects:
+    # animate
     rects[i].y -= rects[i].v
 
-    # remove offscreen rects
-    if rects[i].y + 200 >= 0: # if rect is visible
-      valid_rects.add(rects[i])
-  rects = valid_rects
+    # draw
+    group "v2":
+      box rect.x, rect.y, 150, 125
+      rectangle "head":
+        if rect.flipped: box 0, 0, 50, 50
+        else: box 0, 75, 50, 50
+        if rect.duration == Half:
+          fill "#F2F2F2", 0
+          stroke rect.color
+          strokeWeight 10
+        else: fill rect.color
+        cornerRadius 50
+      rectangle "beam":
+        if rect.flipped: box 0, 25, 10, 100
+        else: box 40, 0, 10, 100
+        fill rect.color
+        cornerRadius 5
+      rectangle "cover":
+        if rect.flipped: box 0, 25, 10, 10
+        else: box 40, 90, 10, 10
+        fill rect.color
+      if rect.duration == Eighth:
+          rectangle "head2":
+            if rect.flipped: box 100, 0, 50, 50
+            else: box 100, 75, 50, 50
+            cornerRadius 50
+            fill rect.color
+          rectangle "beam2":
+            if rect.flipped: box 100, 25, 10, 100
+            else: box 140, 0, 10, 100
+            fill rect.color
+            cornerRadius 5
+          rectangle "cover2":
+            if rect.flipped: box 100, 25, 10, 10
+            else: box 140, 90, 10, 10
+            fill rect.color
+          rectangle "connector":
+            if rect.flipped: box 5, 115, 100, 10
+            else: box 45, 0, 100, 10
+            fill rect.color
 
-  # generate new rects
+    # cleanup
+    if rects[i].y + 200 >= 0: # if rect is visible
+      valid.add(rects[i])
+  rects = valid
+
+  # generate
   while rects.len < 25: # there should always be 25 rect objects
     rects.add(
       Rect(
@@ -43,123 +84,6 @@ proc drawMain*() =
         flipped: sample([true, false])
       )
     )
-  
-  # draw each rect
-  for i, rect in rects:
-    group "bounds":
-      case rect.duration
-      of Half:
-        if rect.flipped:
-          box rect.x, rect.y, 50, 125
-          rectangle "head":
-            box 0, 0, 50, 50
-            cornerRadius 50
-            fill "#000000", 0
-            stroke rect.color
-            strokeWeight 10
-          rectangle "beam":
-            box 0, 25, 10, 100
-            fill rect.color
-            cornerRadius 5
-          rectangle "cover":
-            box 0, 25, 10, 10
-            fill rect.color
-        else:
-          box rect.x, rect.y, 50, 125
-          rectangle "head":
-            box 0, 75, 50, 50
-            cornerRadius 50
-            fill "#000000", 0
-            stroke rect.color
-            strokeWeight 10
-          rectangle "beam":
-            box 40, 0, 10, 100
-            fill rect.color
-            cornerRadius 5
-          rectangle "cover":
-            box 40, 90, 10, 10
-            fill rect.color
-      of Quarter:
-        if rect.flipped:
-          box rect.x, rect.y, 50, 125
-          rectangle "head":
-            box 0, 0, 50, 50
-            cornerRadius 50
-            fill rect.color
-          rectangle "beam":
-            box 0, 25, 10, 100
-            fill rect.color
-            cornerRadius 5
-          rectangle "cover":
-            box 0, 25, 10, 10
-            fill rect.color
-        else:
-          box rect.x, rect.y, 50, 125
-          rectangle "head":
-            box 0, 75, 50, 50
-            cornerRadius 50
-            fill rect.color
-          rectangle "beam":
-            box 40, 0, 10, 100
-            fill rect.color
-            cornerRadius 5
-          rectangle "cover":
-            box 40, 90, 10, 10
-            fill rect.color
-      of Eighth:
-        box rect.x, rect.y, 150, 125
-        if rect.flipped:
-          rectangle "head1":
-            box 0, 0, 50, 50
-            cornerRadius 50
-            fill rect.color
-          rectangle "head2":
-            box 100, 0, 50, 50
-            cornerRadius 50
-            fill rect.color
-          rectangle "beam1":
-            box 0, 25, 10, 100
-            fill rect.color
-            cornerRadius 5
-          rectangle "cover1":
-            box 0, 25, 10, 10
-            fill rect.color
-          rectangle "beam2":
-            box 100, 25, 10, 100
-            fill rect.color
-            cornerRadius 5
-          rectangle "cover2":
-            box 100, 25, 10, 10
-            fill rect.color
-          rectangle "connector beam":
-            box 5, 115, 100, 10
-            fill rect.color
-        else:
-          rectangle "head1":
-            box 0, 75, 50, 50
-            cornerRadius 50
-            fill rect.color
-          rectangle "head2":
-            box 100, 75, 50, 50
-            cornerRadius 50
-            fill rect.color
-          rectangle "beam1":
-            box 40, 0, 10, 100
-            fill rect.color
-            cornerRadius 5
-          rectangle "cover1":
-            box 40, 90, 10, 10
-            fill rect.color
-          rectangle "beam2":
-            box 140, 0, 10, 100
-            fill rect.color
-            cornerRadius 5
-          rectangle "cover2":
-            box 140, 90, 10, 10
-            fill rect.color
-          rectangle "connector beam":
-            box 45, 0, 100, 10
-            fill rect.color
 
   # draw background
   rectangle "background":
