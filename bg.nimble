@@ -19,8 +19,9 @@ import os, strutils
 let buildflags = " --app:gui --opt:speed --gc:arc "
 
 task buildall, "builds all procedures":
+  exec "nimble install -d"
   mkDir "bin"
   for f in listFiles("./src/"):
     if f.endswith(".nim"):
       exec "nim c -d:danger" & buildflags & f
-      mvFile f[0..^5].toExe, "bin\\" & f[4..^5].toExe
+      mvFile f[0..^5].toExe, if f[4..^5] == "bg": "bin\\" & "rand".toExe else: "bin\\" & f[4..^5].toExe

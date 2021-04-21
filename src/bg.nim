@@ -1,3 +1,5 @@
+# renamed to "rand.exe" when using `nimble buildall`
+
 import fidget, fidget/opengl/base, random
 
 import beams, circles, cubes, glass, notes, space
