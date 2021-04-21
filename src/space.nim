@@ -121,3 +121,19 @@ proc drawMain*() =
   rectangle "background":
     box 0, 0, 1280, 720
     fill "#000000"
+
+when isMainModule:
+  import fidget/opengl/base
+
+  randomize()
+
+  proc loadMain() =
+    setTitle("PROCEDURAL BACKGROUND")
+
+  startFidget(
+    draw=drawMain,
+    load=loadMain,
+    w=1280,
+    h=720,
+    mainLoopMode=RepaintOnFrame
+  )

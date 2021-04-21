@@ -1,9 +1,10 @@
 import random, fidget
 
-type Rect = object
-  color: string
-  d, x, y, v: int # diameter, x-pos, y-pos, velocity
-  o: float # opacity
+type
+  Rect = object
+    color: string
+    w, h, x, y, v: int # width, height, x-pos, y-pos, velocity
+    o: float # opacity
 
 const colors: array[4, string] = [
   "#F8A1EC",
@@ -23,13 +24,12 @@ proc drawMain*() =
     rects[i].y -= rects[i].v
 
     # draw
-    rectangle "circle":
-      box rect.x, rect.y, rect.d, rect.d
+    rectangle "beam":
+      box rect.x, rect.y, rect.w, rect.h
       fill rect.color, rect.o
-      cornerRadius rect.d.float / 2
 
     # cleanup
-    if rects[i].y + rects[i].d >= 0: # if rect is visible
+    if rects[i].y + rects[i].h >= 0: # if rect is visible
       valid.add(rects[i])
   rects = valid
 
@@ -38,11 +38,12 @@ proc drawMain*() =
     rects.add(
       Rect(
         color: sample(colors),
-        d: rand(20..100), # diameter
-        x: rand(-19..1279), # x-pos
+        w: rand(5..20), # width
+        h: rand(20..200), # height
+        x: rand(-4..1279), # x-pos
         y: rand(720..1000), # y-pos
         v: rand(1..5), # velocity
-        o: rand(0.25..1.0), # opacity
+        o: rand(0.25..1.0) # opacity
       )
     )
 
@@ -50,3 +51,19 @@ proc drawMain*() =
   rectangle "background":
     box 0, 0, 1280, 720
     fill "#F2F2F2"
+
+when isMainModule:
+  import fidget/opengl/base
+
+  randomize()
+
+  proc loadMain() =
+    setTitle("PROCEDURAL BACKGROUND")
+
+  startFidget(
+    draw=drawMain,
+    load=loadMain,
+    w=1280,
+    h=720,
+    mainLoopMode=RepaintOnFrame
+  )
