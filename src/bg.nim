@@ -2,12 +2,21 @@
 
 import fidget, fidget/opengl/base, random
 
+when defined(playsound):
+  import slappy
+
 import beams, circles, cubes, glass, notes, space
 
 randomize()
 
 proc loadMain() =
   setTitle("PROCEDURAL BACKGROUND")
+
+  when defined(playsound):
+    slappyInit()
+    let sound = newSound("parasailing.wav")
+    assert sound.duration != 0
+    discard sound.play()
 
 startFidget(
   draw=sample(
@@ -25,3 +34,6 @@ startFidget(
   h=720,
   mainLoopMode=RepaintOnFrame
 )
+
+when defined(playsound):
+  slappyClose()
